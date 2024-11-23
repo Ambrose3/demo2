@@ -1,0 +1,30 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+  
+  - name: Update (CentOS)
+    dnf:
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: Update (Ubuntu)
+    apt:
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: all 
+  become: true
+  roles: 
+  - node_exporter
+
+- hosts: CT01 
+  become: true
+  vars: 
+    target_ips:
+      - "192.168.40.101:9100"
+  roles: 
+  - prometheus
+  - grafana
+ 
